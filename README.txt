@@ -1,3 +1,11 @@
+El programa debería.
+	Cargar los datos del recibo de sueldo.
+	Leer los datos cargados previamente.
+	Devolver un mes en particular para su consulta.
+	Comparar 2 recibos de sueldos, y cuales son sus diferencias.
+	Cuestiones estadisticas.
+	...
+
 MainFile
 	Clase principal.
 GraphicFile
