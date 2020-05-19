@@ -27,9 +27,8 @@ class Consulta:
             database = 'recibosdesueldo'
         )
         micursor = mibase.cursor()
-        #datos = self.entrada1.get(), self.entrada2.get(), self.entrada3.get()
         sql = 'SELECT * FROM datos_mes'
-        micursor.execute(sql)#, datos)
+        micursor.execute(sql)
         resultado = micursor.fetchall() # Devuelve una lista de Tuplas con los datos.
         
         return resultado
