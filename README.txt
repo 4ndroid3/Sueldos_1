@@ -13,3 +13,5 @@ GraphicFile
 	Clase que maneja la ventana para carga de datos.
 QueryFile
 	Conexion a la base de datos con MySQL
+
+* El programa se conecta a una DB creada con XAMPP en MySQL y APACHE.

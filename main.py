@@ -16,5 +16,6 @@ class Main(ParteGrafica, Consulta):
 
 if __name__ == '__main__':
     window = Tk()
+    window.config(bg = 'seashell3')
     principal = Main(window)
     mainloop()
