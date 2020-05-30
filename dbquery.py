@@ -41,14 +41,15 @@ class Consulta:
             database = 'recibosdesueldo'
         )
         micursor = mibase.cursor()
-        fechaBusqueda = self.resumen.item(self.resumen.selection())['text']
+        fechaBusqueda = self.resumen.item(self.resumen.selection())['text'] # Renglon del treeview seleccionado con el mouse.
         sql = ('SELECT * FROM datos_mes WHERE fecha_pago = %s')
-        datos = (fechaBusqueda, )
+        datos = (fechaBusqueda, ) # En los datos siempre se debe entregar una tupla, por eso se pone el valor y dsp ","
         micursor.execute(sql, datos)
         listaResultado = micursor.fetchall()
         resultado = listaResultado[0] # El comando fetchall devuelve una lista que en su primer valor tiene una tupla con todos los resultados.
         
         return resultado
+
     def mejorMes(self):
         mibase = mysql.connector.connect(
             host ='localhost',
@@ -63,3 +64,19 @@ class Consulta:
         resultado = listaResultado[0] # El comando fetchall devuelve una lista que en su primer valor tiene una tupla con todos los resultados.
         
         return resultado
+
+    def traerParacomparar(self, mesAcomparar = '', mesAcomparar1 = ''):
+            mibase = mysql.connector.connect(
+                host ='localhost',
+                user = 'root',
+                passwd = '',
+                database = 'recibosdesueldo'
+            )
+            micursor = mibase.cursor()
+            sql = ('SELECT * FROM datos_mes WHERE (fecha_pago = %s) OR (fecha_pago = %s)')
+            datos = (mesAcomparar, mesAcomparar1) # En los datos siempre se debe entregar una tupla, por eso se pone el valor y dsp ","
+            micursor.execute(sql, datos)
+            listaResultado = micursor.fetchall()
+            resultado = listaResultado # El comando fetchall devuelve una lista que en su primer valor tiene una tupla con todos los resultados.
+            
+            return resultado

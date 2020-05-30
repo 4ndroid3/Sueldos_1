@@ -13,36 +13,23 @@ class ParteGrafica(Consulta):
 
         self.mainRoot = root
         self.bg = 'seashell3'
-        self.second_frame = LabelFrame(self.mainRoot, text = 'Carga de datos', bg = self.bg) # Para cada division de la ventana creo un Frame.
+        self.second_frame = LabelFrame(self.mainRoot, text = 'Manipulacion de datos', bg = self.bg) # Para cada division de la ventana creo un Frame.
         self.third_frame = LabelFrame(self.mainRoot, text = 'Lista de cargados', bg = self.bg)
-        self.fourth_frame = LabelFrame(self.mainRoot, text = 'Mes mejor pago', bg = self.bg, height = 500, width = 500)
+        self.fourth_frame = LabelFrame(self.mainRoot, text = 'Mes mejor pago', bg = self.bg)#, height = 500, width = 500)
 
         # Grindeado de los Frames
-        self.second_frame.grid(row = 0, column = 0, sticky = 'NS')
-        self.third_frame.grid(row = 0, column = 1, rowspan = 2, sticky = 'NS')
-        self.fourth_frame.grid(row = 1, column = 0, sticky = 'NS')
+        self.second_frame.grid(row = 0, column = 0, sticky = 'WENS')
+        self.third_frame.grid(row = 0, column = 1, rowspan = 2, sticky = 'WENS')
+        self.fourth_frame.grid(row = 1, column = 0, sticky = 'WENS')
         
         # Frame datos a cargar o Buscar
         
-        search_text1 = Label(self.second_frame, text = 'Año:', bg = self.bg)
-        search_text1.grid(row = 1, column = 0) # Dentro del frame organizo con Grid todos los elementos incluidos en el Frame.
-        search_box1 = Entry(self.second_frame)
-        search_box1.focus()
-        search_box1.grid(row = 1, column = 1, padx = 5)
-
-        search_text2 = Label(self.second_frame, text = 'Mes:', bg = self.bg)
-        search_text2.grid(row = 2, column = 0)
-        search_box2 = Entry(self.second_frame)
-        search_box2.grid(row = 2, column = 1, padx = 5)
-
-        # Frame aparte para dejar botones centrados
-        frameBotones = Frame(self.second_frame, bg = self.bg)
-        frameBotones.grid(row = 3, column = 0, columnspan = 2, padx = 5, pady = 5)
-       
-        botonCarga = Button(frameBotones, text = 'Cargar', command = self.ventanaCarga)
-        botonCarga.grid(row = 0, column = 0, padx = 5, pady = 5)
-        botonBusqueda = Button(frameBotones, text = 'Buscar', command = self.ventanaVisualizarDatos)
-        botonBusqueda.grid(row = 0, column = 1, padx = 5, pady = 5)
+        botonCarga = Button(self.second_frame, text = 'Cargar', command = self.ventanaCarga)
+        botonCarga.grid(row = 0, column = 0, padx = 5, pady = 5, sticky = 'WENS')
+        botonBusqueda = Button(self.second_frame, text = 'Buscar', command = self.ventanaVisualizarDatos)
+        botonBusqueda.grid(row = 1, column = 0, padx = 5, pady = 5, sticky = 'WENS')
+        botonComparar = Button(self.second_frame, text = 'Comparar', command = self.seleccionParacomparar)
+        botonComparar.grid(row = 2, column = 0, padx = 5, pady = 5, sticky = 'WENS',)
     
         # Armado del Frame Treeview
         self.resumen = ttk.Treeview(self.third_frame, columns = ('#1', '#2'))
@@ -64,7 +51,7 @@ class ParteGrafica(Consulta):
 
         mejormes = self.mejorMes() # Recibe los valres del mejor mes desde la DB.
         
-        mejormesSumahs = mejormes[9] + mejormes[10] + mejormes[11]
+        mejormesSumahs = mejormes[9] + mejormes[10] + mejormes[12]
         mejormesSumahs = str(round(mejormesSumahs, 2)) # Redondeo a 2 decimales.
         fechaMejormes = ('Fecha: %s' % (mejormes[6]))
         sueldoMejormes = ('Sueldo: %s' % (mejormes[32]))
@@ -73,10 +60,10 @@ class ParteGrafica(Consulta):
         # Si el total neto es el mas alto de la lista debera traer determinados valores de la tabla.
         Label(self.fourth_frame, text = fechaMejormes, bg = self.bg).grid(row = 0, column = 0, sticky = 'W')
         Label(self.fourth_frame, text = sueldoMejormes, bg = self.bg).grid(row = 1, column = 0, sticky = 'W')
-        Label(self.fourth_frame, text = horasMejormes, bg = self.bg).grid(row = 1, column = 1, sticky = 'W')
-        Label(self.fourth_frame, text = 'Feriado?: ', bg = self.bg).grid(row = 2, column = 1, sticky = 'W')
-        Label(self.fourth_frame, text = 'Compensatorio?: ', bg = self.bg).grid(row = 2, column = 0, sticky = 'W')
-        Label(self.fourth_frame, text = 'Premio?: ', bg = self.bg).grid(row = 2, column = 1, sticky = 'W')
+        Label(self.fourth_frame, text = horasMejormes, bg = self.bg).grid(row = 2, column = 0, sticky = 'W')
+        Label(self.fourth_frame, text = 'Feriado?: ', bg = self.bg).grid(row = 3, column = 0, sticky = 'W')
+        Label(self.fourth_frame, text = 'Compensatorio?: ', bg = self.bg).grid(row = 4, column = 0, sticky = 'W')
+        Label(self.fourth_frame, text = 'Premio?: ', bg = self.bg).grid(row = 5, column = 0, sticky = 'W')
 
         
         # Armado de el Menu Superior
@@ -100,7 +87,7 @@ class ParteGrafica(Consulta):
         # Trae todos los elementos de la tabla al treeview
         for x in resultado_query:
             #print(x)
-            suma_hs = x[9] + x[10] + x[11]
+            suma_hs = x[9] + x[10] + x[12]
             suma_hs = str(round(suma_hs, 2)) # Redondeo a 2 decimales.
             self.resumen.insert('', 0, text = x[6], values = (x[32], suma_hs))
 
@@ -167,7 +154,7 @@ class ParteGrafica(Consulta):
         self.valor12 = entry(frameHaberes, 4, 1)
         label(frameHaberes, '$ HS extras diurnas', self.bg, 5 , 0)
         self.valor13 = entry(frameHaberes, 5, 1)
-        label(frameHaberes, 'Premio P¨resentismo', self.bg, 6, 0)
+        label(frameHaberes, 'Premio Presentismo', self.bg, 6, 0)
         self.valor14 = entry(frameHaberes, 6, 1)
         label(frameHaberes, 'Adicional Puntualidad', self.bg, 7, 0)
         self.valor15 = entry(frameHaberes, 7, 1)
@@ -300,7 +287,7 @@ class ParteGrafica(Consulta):
         label(frameHaberes, resultado[12], self.bg, 4, 1)
         label(frameHaberes, '$ HS extras diurnas:', self.bg, 5 , 0)
         label(frameHaberes, resultado[13], self.bg, 5 , 1)
-        label(frameHaberes, 'Premio P¨resentismo:', self.bg, 6, 0)
+        label(frameHaberes, 'Premio Presentismo:', self.bg, 6, 0)
         label(frameHaberes, resultado[14], self.bg, 6, 1)
         label(frameHaberes, 'Adicional Puntualidad:', self.bg, 7, 0)
         label(frameHaberes, resultado[15], self.bg, 7, 1)
@@ -345,7 +332,168 @@ class ParteGrafica(Consulta):
 
         # Botones
         botonSalir = Button(frameBotones, text = 'Salir', command = self.VisualizarDatos.destroy).pack()
+
+    def apretarBoton(self, par1 = '', par2 = ''):
+        self.resultado = self.traerParacomparar(par1, par2)
+        self.ventanaComparacion()        
+
+    def seleccionParacomparar(self):
+        self.frame = Toplevel(bg = self.bg)
+
+        frame1 = Frame(self.frame, bg = self.bg)
+        frame1.grid(row = 0, column = 0)
+        frame2 = Frame(self.frame, bg = self.bg)
+        frame2.grid(row = 1, column = 0)
+
+        self.fechaSeleccionada = self.resumen.item(self.resumen.selection())['text']
+        Label(frame1, text = 'Mes seleccionado', bg = self.bg).grid(row = 0, column = 0)
+        Label(frame1, text = self.fechaSeleccionada, bg = self.bg).grid(row = 0, column = 1)
+        Label(frame1, text = 'Fecha a comparar', bg = self.bg).grid(row = 1, column = 0)
+        self.fechaAcomparar = Entry(frame1)
+        self.fechaAcomparar.grid(row = 1, column = 1)
+        
+        Button(frame1, text = 'Comparar', command = lambda: self.apretarBoton(self.fechaAcomparar.get(),self.fechaSeleccionada)).grid(row = 2, column = 0, columnspan = 2, pady = 5)
+        
+    def ventanaComparacion(self):
+
+        # Creacion de frames
+        frame2 = Frame(self.frame, bg = self.bg)
+        frame2.grid(row = 3, column = 0)
+        frameTitulo = Frame(frame2, bg = self.bg)
+        frameResumen = LabelFrame(frame2, text = 'Resumen', bg = self.bg)
+        frameHaberes = LabelFrame(frame2, text = 'Haberes', bg = self.bg)
+        frameDescuentos = LabelFrame(frame2, text = 'Descuentos', bg = self.bg)
+        frameTotal = LabelFrame(frame2, text = 'Total', bg = self.bg)
+        
+         # Grideado de los Frames
+        frameTitulo.grid(row = 0, column = 0, columnspan = 2, pady = 10, sticky = 'WNSE')
+        frameResumen.grid(row = 1, column = 0, sticky = 'WNSE')
+        frameHaberes.grid(row = 2, column = 0, sticky = 'WNSE')
+        frameDescuentos.grid(row = 1, column = 1, sticky = 'WNSE')
+        frameTotal.grid(row = 2, column = 1, sticky = 'WNSE')
+        
+
+        # Creacion Labels y boxes.
+        def label(main, text, bg, row, column):
+            label = Label(main, text = text, bg = bg)
+            label.grid(row = row, column = column)
+
+        def label2(main, text, bg, row, column):
+            label = Label(main, text = text, bg = bg, fg = 'red')
+            label.grid(row = row, column = column)
+
+        resultado1 = self.resultado[0]
+        resultado2 = self.resultado[1]
       
+        # Frame Titulo
+        Label(frameTitulo, text = 'Ventana de comparacion de datos', bg = self.bg, font = 20).pack()
+
+        # Frame Resumen 
+        label(frameResumen, 'Nombre:', self.bg, 0, 0)
+        label(frameResumen, resultado1[0], self.bg, 0, 1)
+        label2(frameResumen, resultado2[0], self.bg, 0, 2)
+        label(frameResumen, 'Categoria:', self.bg, 1, 0)
+        label(frameResumen, resultado1[1], self.bg, 1, 1)
+        label2(frameResumen, resultado2[1], self.bg, 1, 2)
+        label(frameResumen, 'Basico $/h:', self.bg, 2, 0)
+        label(frameResumen, resultado1[2], self.bg, 2, 1)
+        label2(frameResumen, resultado2[2], self.bg, 2, 2)
+        label(frameResumen, 'Antiguedad:', self.bg, 3, 0)
+        label(frameResumen, resultado1[3], self.bg, 3, 1)
+        label2(frameResumen, resultado2[3], self.bg, 3, 2)
+        label(frameResumen, 'Antiguedad $/h:', self.bg, 4, 0)
+        label(frameResumen, resultado1[4], self.bg, 4, 1)
+        label2(frameResumen, resultado2[4], self.bg, 4, 2)
+        label(frameResumen, 'Periodo:', self.bg, 5, 0)
+        label(frameResumen, resultado1[5], self.bg, 5, 1)
+        label2(frameResumen, resultado2[5], self.bg, 5, 2)
+        label(frameResumen, 'Fecha de Pago:', self.bg, 6, 0)
+        label(frameResumen, resultado1[6], self.bg, 6, 1)
+        label2(frameResumen, resultado2[6], self.bg, 6, 2)
+        label(frameResumen, 'Empresa:', self.bg, 7, 0)
+        label(frameResumen, resultado1[7], self.bg, 7, 1)
+        label2(frameResumen, resultado2[7], self.bg, 7, 2)
+
+        # Frame Haberes
+        label(frameHaberes, 'Sueldo basico:', self.bg, 0, 0)
+        label(frameHaberes, resultado1[8], self.bg, 0, 1)
+        label2(frameHaberes, resultado2[8], self.bg, 0, 2)
+        label(frameHaberes, 'Cantidad de HS:', self.bg, 1, 0)
+        label(frameHaberes, resultado1[9], self.bg, 1, 1)
+        label2(frameHaberes, resultado2[9], self.bg, 1, 2)
+        label(frameHaberes, 'Cant.HS Nocturnas:', self.bg, 2, 0)
+        label(frameHaberes, resultado1[10], self.bg, 2, 1)
+        label2(frameHaberes, resultado2[10], self.bg, 2, 2)
+        label(frameHaberes, '$ HS Nocturnas:', self.bg, 3, 0)
+        label(frameHaberes, resultado1[11], self.bg, 3, 1)
+        label2(frameHaberes, resultado2[11], self.bg, 3, 2)
+        label(frameHaberes, 'Cant.HS extras:', self.bg, 4, 0)
+        label(frameHaberes, resultado1[12], self.bg, 4, 1)
+        label2(frameHaberes, resultado2[12], self.bg, 4, 2)
+        label(frameHaberes, '$ HS extras diurnas:', self.bg, 5 , 0)
+        label(frameHaberes, resultado1[13], self.bg, 5 , 1)
+        label2(frameHaberes, resultado2[13], self.bg, 5 , 2)
+        label(frameHaberes, 'Premio Presentismo:', self.bg, 6, 0)
+        label(frameHaberes, resultado1[14], self.bg, 6, 1)
+        label2(frameHaberes, resultado2[14], self.bg, 6, 2)
+        label(frameHaberes, 'Adicional Puntualidad:', self.bg, 7, 0)
+        label(frameHaberes, resultado1[15], self.bg, 7, 1)
+        label2(frameHaberes, resultado2[15], self.bg, 7, 2)
+        label(frameHaberes, 'Adicional mod. trabajo:', self.bg, 8, 0)
+        label(frameHaberes, resultado1[16], self.bg, 8, 1)
+        label2(frameHaberes, resultado2[16], self.bg, 8, 2)
+        label(frameHaberes, 'Adicional GMB:', self.bg, 9, 0)
+        label(frameHaberes, resultado1[17], self.bg, 9, 1)
+        label2(frameHaberes, resultado2[17], self.bg, 9, 2)
+        label(frameHaberes, 'Aguinaldo:', self.bg, 10, 0)
+        label(frameHaberes, resultado1[18], self.bg, 10, 1)
+        label2(frameHaberes, resultado2[18], self.bg, 10, 2)
+        label(frameHaberes, 'Cierre de ejercicio:', self.bg, 11, 0)
+        label(frameHaberes, resultado1[19], self.bg, 11, 1)
+        label2(frameHaberes, resultado2[19], self.bg, 11, 2)
+        label(frameHaberes, 'Suma varios:', self.bg, 12, 0)
+        label(frameHaberes, resultado1[20], self.bg, 12, 1)
+        label2(frameHaberes, resultado2[20], self.bg, 12, 2)
+        label(frameHaberes, 'Haberes Varios:', self.bg, 13, 0)
+        label(frameHaberes, resultado1[21], self.bg, 13, 1)
+        label2(frameHaberes, resultado2[21], self.bg, 13, 2)
+        label(frameHaberes, 'Detalle haberes varios:', self.bg, 14, 0)
+        label(frameHaberes, resultado1[22], self.bg, 14, 1)
+        label2(frameHaberes, resultado2[22], self.bg, 14, 2)
+        
+        # Frame Descuentos
+        label(frameDescuentos, 'Gastos comida:', self.bg, 0, 0)
+        label(frameDescuentos, resultado1[23], self.bg, 0, 1)
+        label2(frameDescuentos, resultado2[23], self.bg, 0, 2)
+        label(frameDescuentos, 'Obra Social:', self.bg, 1, 0)
+        label(frameDescuentos, resultado1[24], self.bg, 1, 1)
+        label2(frameDescuentos, resultado2[24], self.bg, 1, 2)
+        label(frameDescuentos, 'Ley 19032:', self.bg, 2, 0)
+        label(frameDescuentos, resultado1[25], self.bg, 2, 1)
+        label2(frameDescuentos, resultado2[25], self.bg, 2, 2)
+        label(frameDescuentos, 'Aporte Jubilatorio:', self.bg, 3, 0)
+        label(frameDescuentos, resultado1[26], self.bg, 3, 1)
+        label2(frameDescuentos, resultado2[26], self.bg, 3, 2)
+        label(frameDescuentos, 'Impuesto a las ganancias:', self.bg, 4, 0)
+        label(frameDescuentos, resultado1[27], self.bg, 4, 1)
+        label2(frameDescuentos, resultado2[27], self.bg, 4, 2)
+        label(frameDescuentos, 'Cuota Sindical:', self.bg, 5, 0)
+        label(frameDescuentos, resultado1[28], self.bg, 5, 1)
+        label2(frameDescuentos, resultado2[28], self.bg, 5, 2)
+        label(frameDescuentos, 'Suma Varios:', self.bg, 6, 0)
+        label(frameDescuentos, resultado1[29], self.bg, 6, 1)
+        label2(frameDescuentos, resultado2[29], self.bg, 6, 2)
+        label(frameDescuentos, 'Descuentos Varios:', self.bg, 7, 0)
+        label(frameDescuentos, resultado1[30], self.bg, 7, 1)
+        label2(frameDescuentos, resultado2[30], self.bg, 7, 2)
+        label(frameDescuentos, 'Detalle descuentos varios:', self.bg, 8, 0)
+        label(frameDescuentos, resultado1[31], self.bg, 8, 1)
+        label2(frameDescuentos, resultado2[31], self.bg, 8, 2)
+
+        # Frame Total
+        label(frameTotal, 'Total neto:', self.bg, 0, 0)
+        label(frameTotal, resultado1[32], self.bg, 0, 1)
+        label2(frameTotal, resultado2[32], self.bg, 0, 2)
 
 if __name__ == '__main__':
 
