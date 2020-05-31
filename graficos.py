@@ -338,22 +338,26 @@ class ParteGrafica(Consulta):
         self.ventanaComparacion()        
 
     def seleccionParacomparar(self):
-        self.frame = Toplevel(bg = self.bg)
+        if (self.resumen.item(self.resumen.selection())['text']) == '':
+            showerror ("Error", "No se seleccion una carga")
+            print('No se seleccion una carga')
+        else:
+            self.frame = Toplevel(bg = self.bg)
 
-        frame1 = Frame(self.frame, bg = self.bg)
-        frame1.grid(row = 0, column = 0)
-        frame2 = Frame(self.frame, bg = self.bg)
-        frame2.grid(row = 1, column = 0)
+            frame1 = Frame(self.frame, bg = self.bg)
+            frame1.grid(row = 0, column = 0)
+            frame2 = Frame(self.frame, bg = self.bg)
+            frame2.grid(row = 1, column = 0)
 
-        self.fechaSeleccionada = self.resumen.item(self.resumen.selection())['text']
-        Label(frame1, text = 'Mes seleccionado', bg = self.bg).grid(row = 0, column = 0)
-        Label(frame1, text = self.fechaSeleccionada, bg = self.bg).grid(row = 0, column = 1)
-        Label(frame1, text = 'Fecha a comparar', bg = self.bg).grid(row = 1, column = 0)
-        self.fechaAcomparar = Entry(frame1)
-        self.fechaAcomparar.grid(row = 1, column = 1)
-        
-        Button(frame1, text = 'Comparar', command = lambda: self.apretarBoton(self.fechaAcomparar.get(),self.fechaSeleccionada)).grid(row = 2, column = 0, columnspan = 2, pady = 5)
-        
+            self.fechaSeleccionada = self.resumen.item(self.resumen.selection())['text']
+            Label(frame1, text = 'Mes seleccionado', bg = self.bg).grid(row = 0, column = 0)
+            Label(frame1, text = self.fechaSeleccionada, bg = self.bg).grid(row = 0, column = 1)
+            Label(frame1, text = 'Fecha a comparar', bg = self.bg).grid(row = 1, column = 0)
+            self.fechaAcomparar = Entry(frame1)
+            self.fechaAcomparar.grid(row = 1, column = 1)
+            
+            Button(frame1, text = 'Comparar', command = lambda: self.apretarBoton(self.fechaAcomparar.get(),self.fechaSeleccionada)).grid(row = 2, column = 0, columnspan = 2, pady = 5)
+            
     def ventanaComparacion(self):
 
         # Creacion de frames
@@ -382,8 +386,8 @@ class ParteGrafica(Consulta):
             label = Label(main, text = text, bg = bg, fg = 'red')
             label.grid(row = row, column = column)
 
-        resultado1 = self.resultado[0]
-        resultado2 = self.resultado[1]
+        resultado1 = self.resultado[1]
+        resultado2 = self.resultado[0]
       
         # Frame Titulo
         Label(frameTitulo, text = 'Ventana de comparacion de datos', bg = self.bg, font = 20).pack()
